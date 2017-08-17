@@ -24,4 +24,5 @@ Podfile.lock
 *.swp
 !.gitkeep
 .DS_Store
+Electron\ Shell-darwin-x64/
 
