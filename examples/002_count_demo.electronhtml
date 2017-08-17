@@ -1,0 +1,13 @@
+<title>Count demo</title>
+
+<body style="background-color: #000; color: #fff;">
+</body>
+
+<script>
+window.state('io.github.uchcode.electron-shell.example.002')
+for (let count=1; count<=100; count++) {
+    setTimeout(()=>{
+        document.log(count)
+    },10*count)
+}
+</script>

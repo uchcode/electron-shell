@@ -1,0 +1,39 @@
+<title>Count demo</title>
+
+<body style="background-color: #000; color: #fff;">
+</body>
+
+<script>
+function log(text) {
+    let code = document.createElement('code')
+    code.setAttribute('style','display:block;white-space:pre-wrap;')
+    code.textContent = text
+    document.body.appendChild(code)
+    document.body.scrollTop = document.body.scrollHeight
+    return code
+}
+
+identifier = 'io.github.uchcode.electron-shell.example.001'
+try {
+    let s = JSON.parse(localStorage.getItem(identifier))
+    window.moveTo(s.x, s.y)
+    window.resizeTo(s.w, s.h)
+} catch(e) {
+    let w=500, h=400
+    let x=(screen.width-w)/2, y=(screen.height-h)/2-100
+    window.moveTo(x,y)
+    window.resizeTo(w,h)
+}
+window.addEventListener('beforeunload',(event)=>{
+    localStorage.setItem(identifier, JSON.stringify({
+        x:window.screenX, y:window.screenY,
+        w:window.outerWidth, h:window.outerHeight,
+    }))
+})
+
+for (let count=1; count<=100; count++) {
+    setTimeout(()=>{
+        log(count)
+    },10*count)
+}
+</script>
