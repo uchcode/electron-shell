@@ -1,0 +1,52 @@
+<title>Async demo</title>
+
+<body>
+</body>
+
+<script type="text/javascript">
+window.state('io.github.uchcode.electron-shell.example.004')
+
+const fs = require('fs')
+
+target = process.env.HOME+'/Documents/'
+
+Promise.resolve(target)
+    .then((targetPath) => {
+        return new Promise((resolve, reject) => {
+            fs.readdir(targetPath, (error, items) => {
+                if (error) {
+                    reject(error)
+                } else {
+                    resolve(items.filter(e=>!e.startsWith('.')).map(e=>target+e))
+                }
+            })
+        })
+    })
+    .then((items) => {
+        return new Promise((resolve, reject) => {
+            let dirs = []
+            Promise.resolve(items).then(function loop(items) {
+                return new Promise((res, rej) => {
+                    let item = items.shift()
+                    fs.lstat(item, (err,stat) => {
+                        if (err) return rej(err)
+                        if (stat.isDirectory()) dirs.push(item)
+                        if (!items.length) return resolve(dirs)
+                        res(items)
+                    })
+                })
+                .then(loop)
+                .catch(err => {throw err})
+            })
+            .catch((error) => reject(error))
+        })
+    })
+    .then((dirs) => {
+        dirs.forEach(e=>document.log(e))
+    })
+    .catch((error) => {
+        document.log("error: " + error)
+    })
+
+</script>
+
