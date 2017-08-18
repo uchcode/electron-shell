@@ -1,6 +1,6 @@
 # electron-shell
 
-Electronのレンダラーコードをシェルスクリプトのように実行するアプリです。[Ruby Shoes!](http://shoesrb.com) にインスパイアされて作りました。
+Electronのレンダラーコードをシェルスクリプトのように実行するMacアプリです。[Ruby Shoes!](http://shoesrb.com) にインスパイアされて作りました。
 
 ## システム構成
 
@@ -21,6 +21,6 @@ Xcode を MacApp Store より入手してください。node.js は HomeBrew で
 
 ## 使用例
 
-プロジェクト内にある ```examples``` をダブルクリックするとコードが実行されます。実行前にコード内容を確認してください。コードは ```.electronhtml``` と ```.electronhtmld``` の二種類があります。前者は Electron の一般的なレンダラープロセスコードとなっています。後者の ```electronhtmld``` はレンダラープロセスコード群を１つの書類のように扱うバンドル形式の書類です。
+プロジェクト内にある ```examples``` をダブルクリックするとコードが実行されます。実行前にコード内容を確認してください。コードは ```.electronhtml``` と ```.electronhtmld``` の二種類があります。前者は一般的なHTMLファイルでアプリ独自の拡張子を割り当てています。後者の ```electronhtmld``` はHTMLファイル群を１つの書類のように扱うバンドル形式の書類です。
 
 
