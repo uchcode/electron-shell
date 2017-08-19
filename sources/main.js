@@ -4,16 +4,18 @@ const url = require('url')
 
 let winW = 0, winH = 0
 let windows = []
-let pathForReady = undefined
+let pathsForReady = []
 
 function setEnabledMenuItems(enabled=true) {
-    let items = Menu.getApplicationMenu().commandsMap['27'].submenu.items
-    for (let i of items) {
-        i.enabled = enabled
-    }
+    Menu.getApplicationMenu().commandsMap['27'].submenu.items.forEach(i=>i.enabled=enabled)
 }
 
 function makeHtmlWindow(filePath) {
+    for (let w of windows) {
+        let p = decodeURI(w.webContents.getURL().replace(/^file:\/\//,''))
+        if (p.startsWith(filePath+'/')) return w.show()
+        if (p == filePath) return w.show()
+    }
     let win = new BrowserWindow({
         width:winW, height:winH,
         webPreferences: {
@@ -35,14 +37,15 @@ function makeHtmlWindow(filePath) {
     })
     switch (path.extname(filePath)) {
         case '.electronhtmld':
+        case '.htmld':
             var entryPoint = filePath + '/index.html'
             break
         case '.electronhtml':
+        case '.htmls':
             var entryPoint = filePath
             break
     }
     win.loadURL(url.format({pathname:entryPoint,protocol:'file:',slashes:true}))
-    // win.webContents.openDevTools()
 }
 
 app.on('ready', () => {
@@ -51,32 +54,27 @@ app.on('ready', () => {
         label: 'Open',
         accelerator: 'CmdOrCtrl+O',
         click() {
-            let files = dialog.showOpenDialog({
+            let paths = dialog.showOpenDialog({
                 filters: [
-                    {name:'Electron Choco HTML',extensions:['electronhtml']},
-                    {name:'Electron Choco HTML bundle',extensions:['electronhtmld']},
+                    {name:'Electron Choco HTML',extensions:['electronhtml','htmls']},
+                    {name:'Electron Choco HTML bundle',extensions:['electronhtmld','htmld']},
                 ],
             })
-            if (files) {
-                for (let f of files) makeHtmlWindow(f)
+            if (paths) {
+                paths.forEach(p=>makeHtmlWindow(p))
             }
         },
     }))
     Menu.setApplicationMenu(menu)
-    if (!pathForReady) return setEnabledMenuItems(false)
-    makeHtmlWindow(pathForReady)
+    if (!pathsForReady.length) return setEnabledMenuItems(false)
+    pathsForReady.forEach(p=>makeHtmlWindow(p))
 })
 
 app.on('open-file', (event, filePath) => {
     event.preventDefault()
     try {
-        for (let w of windows) {
-            let p = decodeURI(w.webContents.getURL().replace(/^file:\/\//,''))
-            if (p.startsWith(filePath+'/')) return w.show()
-            if (p == filePath) return w.show()
-        }
         makeHtmlWindow(filePath)
     } catch(e) {
-        pathForReady = filePath
+        pathsForReady.push(filePath)
     }
 })
