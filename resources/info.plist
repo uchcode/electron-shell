@@ -6,6 +6,7 @@
             <key>CFBundleTypeExtensions</key>
             <array>
                 <string>electronhtml</string>
+                <string>htmls</string>
             </array>
             <key>CFBundleTypeIconFile</key>
             <string>ElectronHTML.icns</string>
@@ -18,6 +19,7 @@
             <key>CFBundleTypeExtensions</key>
             <array>
                 <string>electronhtmld</string>
+                <string>htmld</string>
             </array>
             <key>CFBundleTypeIconFile</key>
             <string>ElectronHTML.icns</string>
