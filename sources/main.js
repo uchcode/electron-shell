@@ -7,7 +7,7 @@ let windows = []
 let pathsForReady = []
 
 function setEnabledMenuItems(enabled=true) {
-    Menu.getApplicationMenu().commandsMap['27'].submenu.items.forEach(i=>i.enabled=enabled)
+    Menu.getApplicationMenu().items.filter(e=>e.label=='View')[0].submenu.items.forEach(i=>i.enabled=enabled)
 }
 
 function makeHtmlWindow(filePath) {
@@ -36,12 +36,10 @@ function makeHtmlWindow(filePath) {
         `)
     })
     switch (path.extname(filePath)) {
-        case '.electronhtmld':
         case '.htmld':
             var entryPoint = filePath + '/index.html'
             break
-        case '.electronhtml':
-        case '.htmls':
+        case '.html':
             var entryPoint = filePath
             break
     }
@@ -50,14 +48,14 @@ function makeHtmlWindow(filePath) {
 
 app.on('ready', () => {
     let menu = Menu.buildFromTemplate(require('./menu'))
-    menu.commandsMap['33'].submenu.insert(0, new MenuItem({
+    menu.items.filter(e=>e.label=='Window')[0].submenu.insert(0, new MenuItem({
         label: 'Open',
         accelerator: 'CmdOrCtrl+O',
         click() {
             let paths = dialog.showOpenDialog({
                 filters: [
-                    {name:'Electron Choco HTML',extensions:['electronhtml','htmls']},
-                    {name:'Electron Choco HTML bundle',extensions:['electronhtmld','htmld']},
+                    {name:'Electron Choco HTML',extensions:['html']},
+                    {name:'Electron Choco HTML bundle',extensions:['htmld']},
                 ],
             })
             if (paths) {
