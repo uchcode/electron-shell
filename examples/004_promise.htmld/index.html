@@ -5,11 +5,8 @@
 
 <script type="text/javascript">
 window.state('io.github.uchcode.electron-shell.example.004')
-
 const fs = require('fs')
-
 target = process.env.HOME+'/Documents/'
-
 Promise.resolve(target)
     .then((targetPath) => {
         return new Promise((resolve, reject) => {
@@ -47,6 +44,5 @@ Promise.resolve(target)
     .catch((error) => {
         document.log("error: " + error)
     })
-
 </script>
 

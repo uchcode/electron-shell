@@ -1,0 +1,8 @@
+{
+  "electron-shell": {
+    "entryPoint": "default.html",
+    "transparent": true, 
+    "frame": false,
+    "alwaysOnTop": true
+  }
+}
