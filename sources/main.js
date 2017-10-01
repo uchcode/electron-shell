@@ -1,12 +1,13 @@
 const {app, Menu, MenuItem, dialog, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
+const fs = require('fs')
 
 let winW = 0, winH = 0
 let windows = []
 let pathsForReady = []
 
-function setEnabledMenuItems(enabled=true) {
+function app_setEnabledMenuItems(enabled=true) {
     Menu.getApplicationMenu().items.filter(e=>e.label=='View')[0].submenu.items.forEach(i=>i.enabled=enabled)
 }
 
@@ -16,17 +17,42 @@ function makeHtmlWindow(filePath) {
         if (p.startsWith(filePath+'/')) return w.show()
         if (p == filePath) return w.show()
     }
-    let win = new BrowserWindow({
-        width:winW, height:winH,
-        webPreferences: {
-            preload: path.join(__dirname,'preload.js'),
-        },
-    })
+    let browserWindowOptions = {
+        width : winW,
+        height: winH,
+    }
+    switch (path.extname(filePath)) {
+        case '.html':
+            var entryPoint = filePath
+            browserWindowOptions.webPreferences = {
+                preload: path.join(__dirname,'preload.js'),
+            }
+            break
+        case '.htmld':
+            try {
+                let c = fs.readFileSync(filePath+'/package.json','utf8')
+                let package_json = JSON.parse(c)["electron-shell"]
+                var entryPoint = filePath + '/' + package_json.entryPoint || 'index.html'
+                package_json.width = package_json.width || browserWindowOptions.width
+                package_json.height = package_json.height || browserWindowOptions.height
+                package_json.webPreferences = {
+                    preload: path.join(__dirname,'preload.js'),
+                }
+                browserWindowOptions = package_json
+            } catch(e) {
+                var entryPoint = filePath + '/index.html'
+                browserWindowOptions.webPreferences = {
+                    preload: path.join(__dirname,'preload.js'),
+                }
+            }
+            break
+    }
+    let win = new BrowserWindow(browserWindowOptions)
     windows.push(win)
-    setEnabledMenuItems(true)
+    app_setEnabledMenuItems(true)
     win.on('closed', (event) => {
         windows = windows.filter(e=>e!==event.sender)
-        if (!windows.length) setEnabledMenuItems(false)
+        if (!windows.length) app_setEnabledMenuItems(false)
     })
     win.webContents.on('did-finish-load', (event) => {
         win.webContents.executeJavaScript(`
@@ -35,14 +61,6 @@ function makeHtmlWindow(filePath) {
             }
         `)
     })
-    switch (path.extname(filePath)) {
-        case '.htmld':
-            var entryPoint = filePath + '/index.html'
-            break
-        case '.html':
-            var entryPoint = filePath
-            break
-    }
     win.loadURL(url.format({pathname:entryPoint,protocol:'file:',slashes:true}))
 }
 
@@ -64,7 +82,7 @@ app.on('ready', () => {
         },
     }))
     Menu.setApplicationMenu(menu)
-    if (!pathsForReady.length) return setEnabledMenuItems(false)
+    if (!pathsForReady.length) return app_setEnabledMenuItems(false)
     pathsForReady.forEach(p=>makeHtmlWindow(p))
 })
 

@@ -5,18 +5,6 @@
         <dict>
             <key>CFBundleTypeExtensions</key>
             <array>
-                <string>html</string>
-            </array>
-            <key>CFBundleTypeIconFile</key>
-            <string>ElectronHTML.icns</string>
-            <key>CFBundleTypeName</key>
-            <string>Electron Shell HTML</string>
-            <key>CFBundleTypeRole</key>
-            <string>Viewer</string>
-        </dict>
-        <dict>
-            <key>CFBundleTypeExtensions</key>
-            <array>
                 <string>htmld</string>
             </array>
             <key>CFBundleTypeIconFile</key>
