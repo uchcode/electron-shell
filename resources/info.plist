@@ -5,8 +5,7 @@
         <dict>
             <key>CFBundleTypeExtensions</key>
             <array>
-                <string>electronhtml</string>
-                <string>htmls</string>
+                <string>html</string>
             </array>
             <key>CFBundleTypeIconFile</key>
             <string>ElectronHTML.icns</string>
@@ -18,7 +17,6 @@
         <dict>
             <key>CFBundleTypeExtensions</key>
             <array>
-                <string>electronhtmld</string>
                 <string>htmld</string>
             </array>
             <key>CFBundleTypeIconFile</key>
